@@ -59,7 +59,7 @@
 
   ns.PngExportController.prototype.mergedExport_ = function (zip) {
     for (var i = 0; i < this.piskelController.getFrameCount(); i++) {
-      var frame = this.piskelController.getFrameAt(i);
+      var frame = this.piskelController.getMergedFrameAt(i);
       var canvas = this.getFrameAsCanvas_(frame);
       var basename = this.pngFilePrefixInput.value;
       var filename = basename + (i + 1) + '.png';
