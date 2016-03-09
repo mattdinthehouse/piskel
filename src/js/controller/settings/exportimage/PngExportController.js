@@ -59,8 +59,8 @@
 
   ns.PngExportController.prototype.mergedExport_ = function (zip) {
     for (var i = 0; i < this.piskelController.getFrameCount(); i++) {
-      var frame = this.piskelController.getMergedFrameAt(i);
-      var canvas = this.getFrameAsCanvas_(frame);
+      var render = this.piskelController.renderFrameAt(i, true);
+      var canvas = pskl.utils.CanvasUtils.createFromImage(render);
       var basename = this.pngFilePrefixInput.value;
       var filename = basename + (i + 1) + '.png';
       zip.file(filename, pskl.utils.CanvasUtils.getBase64FromCanvas(canvas) + '\n', {base64: true});
@@ -72,19 +72,13 @@
     for (var j = 0; this.piskelController.hasLayerAt(j); j++) {
       var layer = this.piskelController.getLayerAt(j);
       for (var i = 0; i < this.piskelController.getFrameCount(); i++) {
-        var frame = layer.getFrameAt(i);
-        var canvas = this.getFrameAsCanvas_(frame);
+        var render = pskl.utils.LayerUtils.renderFrameAt(layer, i, true);
+        var canvas = pskl.utils.CanvasUtils.createFromImage(render);
         var basename = this.pngFilePrefixInput.value;
         var filename = 'l' + j + '_' + basename + (i + 1) + '.png';
         zip.file(filename, pskl.utils.CanvasUtils.getBase64FromCanvas(canvas) + '\n', {base64: true});
       }
     }
-  };
-
-  ns.PngExportController.prototype.getFrameAsCanvas_ = function (frame) {
-    var canvasRenderer = new pskl.rendering.CanvasRenderer(frame, 1);
-    canvasRenderer.drawTransparentAs(Constants.TRANSPARENT_COLOR);
-    return canvasRenderer.render();
   };
 
   ns.PngExportController.prototype.getPiskelName_ = function () {
